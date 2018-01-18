@@ -1,0 +1,29 @@
+{
+  "name": "lyriqz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "connect-flash": "^0.1.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "ls": "^0.2.1",
+    "mongoose": "^4.13.9",
+    "nodemon": "^1.14.11",
+    "passport": "^0.4.0",
+    "passport-spotify": "^0.3.1",
+    "random-useragent": "^0.3.1",
+    "request": "^2.83.0",
+    "requests": "^0.2.2"
+  }
+}

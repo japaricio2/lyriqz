@@ -1,0 +1,10 @@
+change callback url in app.js
+
+change css and other static files in header
+
+on prod server cp over new static files from home directory
+  cp -a lyriqz/public/ ./static/lyriqz/public/
+
+upload keys
+
+ajax url, change it back

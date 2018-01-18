@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+
+  <!-- PRODUCTION PATHS FOR STATIC FILES -->
+  <link rel="stylesheet" href="/s/lyriqz/public/styles/styles.css">
+  <link rel="stylesheet" href="/s/lyriqz/public/styles/bulma.css">
+  <script src="/s/lyriqz/public/scripts/index.js"></script>
+
+  <!-- LOCAL DEV PATHS FOR STATIC FILES -->
+  <!-- <link rel="stylesheet" href="/styles/styles.css">
+  <script src="/scripts/index.js"></script>
+  <link rel="stylesheet" href="https://jxja.me/s/lyriqz/public/styles/bulma.css"> -->
+  
+  <title>Lyriqz</title>
+</head>
+<body>
+    <nav class="navbar is-light">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="./"><span class="icon"><i class="fas fa-music"></i></span><span>Lyriqz</span></a>
+        <div class="navbar-burger burger" data-target="transparent">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <div id="transparent" class="navbar-menu">
+        <div class="navbar-end ">
+          <div class="navbar-item ">
+            <div class="field is-grouped">
+              <%if(currentUser) {%>
+                <p class="control">
+                  <span class="icon">
+                    <i class="fab fa-spotify"></i>
+                  </span>
+                </p>
+                <p class="control">
+                  <a class="button is-light" href="./logout">
+                    <span class="icon">
+                      <i class="fas fa-sign-out-alt"></i>
+                    </span>
+                    <span>Logout</span>
+                  </a>
+                </p>
+              <%}%>
+              <%if(!currentUser) {%>
+                <p class="control">
+                  <a class="button is-light" href="./auth/spotify">
+                    <span class="icon">
+                      <i class="fas fa-sign-in-alt"></i>
+                    </span>
+                    <span>Login</span>
+                  </a>
+                  </p>
+              <%}%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>

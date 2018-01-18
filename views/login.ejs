@@ -1,0 +1,29 @@
+<% include ./partials/header %>
+
+  <section class="hero is-light is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <%if(error && error.length > 0) {%>
+          <article class="message is-danger is-small">
+            <div class="message-header">
+              <p>Error</p>
+            </div>
+            <div class="message-body">
+              <%=error%>
+            </div>
+          </article>
+          <%}%>
+        <h1 class="title">
+          Lyriqz
+        </h1>
+        <a class="button is-primary is-large" href="./auth/spotify">
+          <span>Login to </span>
+          <span class="icon">
+            <i class="fab fa-spotify"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <% include ./partials/footer %>

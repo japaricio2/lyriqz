@@ -1,0 +1,29 @@
+<% include ./partials/header %>
+
+  <section class="hero is-light is-medium">
+    <div class="hero-body">
+      <div class="container">
+        <%if(error && error.length > 0) {%>
+          <div classs="container">
+            <article class="message is-danger is-small">
+              <div class="message-header">
+                <p>Error</p>
+              </div>
+              <div class="message-body">
+                <%=error%>
+              </div>
+            </article>
+          </div>
+          <%}%>
+        <h1 class="title">
+          Hmmm... Sorry about that.
+        </h1>
+        <h2 class="subtitle">
+          Try playing a different song before you try again.
+        </h2>
+        <a href="./lyrics" class="button is-primary">Try Again</a>
+      </div>
+    </div>
+  </section>
+
+  <% include ./partials/footer %>

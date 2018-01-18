@@ -1,0 +1,9 @@
+.columns {
+  padding-top: 1rem;
+}
+.notification {
+  border-radius: 0;
+}
+.notification.is-info {
+  background-color: #40eabd;
+}
