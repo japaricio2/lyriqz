@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar is-light">
       <div class="navbar-brand">
-        <a class="navbar-item" href="./"><span class="icon"><i class="fas fa-music"></i></span><span>Lyriqz</span></a>
+        <a class="navbar-item" href="./"><span class="icon"><i class="fab fa-spotify"></i></i></span><span>Lyriqz</span></a>
         <div class="navbar-burger burger" data-target="transparent">
           <span></span>
           <span></span>
@@ -33,11 +33,6 @@
             <div class="field is-grouped">
               <%if(currentUser) {%>
                 <p class="control">
-                  <span class="icon">
-                    <i class="fab fa-spotify"></i>
-                  </span>
-                </p>
-                <p class="control">
                   <a class="button is-light" href="./logout">
                     <span class="icon">
                       <i class="fas fa-sign-out-alt"></i>
@@ -48,7 +43,7 @@
               <%}%>
               <%if(!currentUser) {%>
                 <p class="control">
-                  <a class="button is-light" href="./auth/spotify">
+                  <a class="button is-light" href="/l/auth/spotify">
                     <span class="icon">
                       <i class="fas fa-sign-in-alt"></i>
                     </span>
