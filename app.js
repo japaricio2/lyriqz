@@ -125,13 +125,12 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
     .then(function (foundUser) {
       console.log("\n---------------------- /l/lyrics -----------------------------");
       spotify.getCurrentSong(foundUser.accessToken, function (song) {
-        console.log(`Song Name: ${song.name}`);
-        // console.log(song)
         if (!song) {
           req.flash('error', "Hmm, seems like we figure out what song you're currently playing");
           res.redirect('/l/error');
           console.log('song.id || song.name returned null');
         } else {
+          console.log(`Song Name: ${song.name}`);
           spotify.getTrack(foundUser.accessToken, song.id, function (songData) {
             if (!songData) {
               req.flash('error', "Hmm, seems like we can't see what song you're currently playing.");
