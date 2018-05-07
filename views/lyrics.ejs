@@ -4,20 +4,55 @@
     
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">
+        <h1 id="song-title" class="title">
           <%=song.name%>
         </h1>
-        <h2 class="subtitle">
+        <h2 id="song-artist" class="subtitle">
           <%=song.artist%>
+          <!-- <%=song.progress_ms%> -->
         </h2>
       </div>
     </div>
   </section>
   <div class="columns is-mobile is-centered">
-    <div class="column is-narrow is-four-fifths">
+    <div id="lyrics" class="column is-narrow is-four-fifths">
       <%-data%>
     </div>
+
   </div>
+
+  <script>
+    <% var currentSong = song.name%>
+    <% var currentProgress =  song.progress_ms%>
+
+    var currentSong = "<%=currentSong%>";
+    var currentProgress = <%=currentProgress%>;
+
+    function checkForNewLyrics() {
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var payload = JSON.parse(xhttp.response);
+
+          if (payload.songName) {
+            currentSong = payload.songName;
+            document.getElementById("song-artist").innerText = payload.songArtist;
+            document.getElementById("song-title").innerText = payload.songName;
+            document.getElementById("lyrics").innerHTML = payload.songLyrics;
+          }
+        }
+      }
+      // dev url
+      // xhttp.open('POST', 'http://localhost:3000/l/update', true);
+      xhttp.open('POST', 'http://jxja.me:3000/l/update', true);
+
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("sName=" + currentSong);
+    }
+    setInterval(checkForNewLyrics, 30000);
+  </script>
   
 <% include ./partials/footer %>
 

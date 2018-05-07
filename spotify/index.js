@@ -43,7 +43,6 @@ var spotify = {
         callback(undefined);
       }
     });
-
   },
   getCurrentSong: function (token, callback) {
     
@@ -60,10 +59,9 @@ var spotify = {
       var payload = {};
 
       if (!error && statusCode === 200) {
-        var info = {};
         try {
-          info = JSON.parse(body);
-          payload.progress = info.progress_ms;
+          var info = JSON.parse(body);
+          payload.progress_ms = info.progress_ms;
           payload.id = info.item.id;
           payload.name = info.item.name;
           payload.artist = info.item.artists[0].name;
