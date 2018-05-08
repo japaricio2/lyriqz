@@ -274,105 +274,99 @@ app.post('/l/update', ensureAuthenticated, function (req, res) {
           res.json(newPayload);
           return;
         } else {
-          // GET NEW LYRICS SEND AS JSON 
-          if (!currSongData) {
-            res.json(newPayload);
-            return;
-          } else {
-            spotify.getTrack(foundUser.accessToken, currSongData.id, function (songData) {
-              if (!songData) {
-                res.json(newPayload);
-                return;
-              } else {
-                var artists = [];
-                if (songData.artists && songData.artists.length > 0) {
-                  songData.artists.forEach(function (artist) {
-                    artists.push(artist.name);
-                  });
-                }
-                Track.find({
-                  'name': currSongData.name
-                }, function (err, foundTracks) {
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    if (!foundTracks) {
-                      // null track
-                      res.json(newPayload);
-                      return;
-                    } else if (foundTracks.length > 0) {
-                      foundTracks.forEach(function (track) {
-                        if (track.artist === currSongData.artist) {
-                          var finalLyrics = '';
-                          for (var i = 0; i < track.lyrics.length; i++) {
-                            if (track.lyrics[i] === '\n' || track.lyrics[i] === '') {
-                              if (i >= 1) finalLyrics += '<br>';
-                            } else {
-                              finalLyrics += track.lyrics[i];
-                            }
-                          }
-                          res.json({
-                            songName: currSongData.name,
-                            songArtist: currSongData.artist,
-                            progress_ms: currSongData.progress_ms,
-                            songLyrics: finalLyrics
-                          });
-                          return;
-                        }
-                      });
-                    } else {
-                      // we must scrape for lyrics since not in local db
-                      getUrl.musixmatch(currSongData.name, artists, function (url) {
-                        if (!url) {
-                          res.json(newPayload);
-                        } else {
-                          scrape.musix(url, function (lyrics) {
-                            if (!lyrics) {
-                              res.json(newPayload);
-                            } else {
-                              var finalLyrics = '';
-                              lyrics.forEach(function (line) {
-                                if (line === '\n' || ' ') {
-                                  finalLyrics += '<br>'
-                                }
-                                finalLyrics += line;
-                              });
-
-                              res.json({
-                                songName: currSongData.name,
-                                songArtist: currSongData.artist,
-                                progress_ms: currSongData.progress_ms,
-                                songLyrics: finalLyrics
-                              });
-
-                              var dbLyrics = '';
-                              lyrics.forEach(function (line) {
-                                dbLyrics += line
-                              });
-                              // Build Track document
-                              var newTrack = {
-                                name: currSongData.name,
-                                artist: currSongData.artist,
-                                artists: artists,
-                                album: songData.album.name,
-                                spotifyID: songData.id,
-                                lyrics: dbLyrics
-                              }
-                              Track.create(newTrack, function (err, track) {
-                                if (err) {
-                                  console.log(err);
-                                }
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  }
+          spotify.getTrack(foundUser.accessToken, currSongData.id, function (songData) {
+            if (!songData) {
+              res.json(newPayload);
+              return;
+            } else {
+              var artists = [];
+              if (songData.artists && songData.artists.length > 0) {
+                songData.artists.forEach(function (artist) {
+                  artists.push(artist.name);
                 });
               }
-            });
-          }
+              Track.find({
+                'name': currSongData.name
+              }, function (err, foundTracks) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  if (!foundTracks) {
+                    // null track
+                    res.json(newPayload);
+                    return;
+                  } else if (foundTracks.length > 0) {
+                    foundTracks.forEach(function (track) {
+                      if (track.artist === currSongData.artist) {
+                        var finalLyrics = '';
+                        for (var i = 0; i < track.lyrics.length; i++) {
+                          if (track.lyrics[i] === '\n' || track.lyrics[i] === '') {
+                            if (i >= 1) finalLyrics += '<br>';
+                          } else {
+                            finalLyrics += track.lyrics[i];
+                          }
+                        }
+                        res.json({
+                          songName: currSongData.name,
+                          songArtist: currSongData.artist,
+                          progress_ms: currSongData.progress_ms,
+                          songLyrics: finalLyrics
+                        });
+                        return;
+                      }
+                    });
+                  } else {
+                    // we must scrape for lyrics since not in local db
+                    getUrl.musixmatch(currSongData.name, artists, function (url) {
+                      if (!url) {
+                        res.json(newPayload);
+                      } else {
+                        scrape.musix(url, function (lyrics) {
+                          if (!lyrics) {
+                            res.json(newPayload);
+                          } else {
+                            var finalLyrics = '';
+                            lyrics.forEach(function (line) {
+                              if (line === '\n' || ' ') {
+                                finalLyrics += '<br>'
+                              }
+                              finalLyrics += line;
+                            });
+
+                            res.json({
+                              songName: currSongData.name,
+                              songArtist: currSongData.artist,
+                              progress_ms: currSongData.progress_ms,
+                              songLyrics: finalLyrics
+                            });
+
+                            var dbLyrics = '';
+                            lyrics.forEach(function (line) {
+                              dbLyrics += line
+                            });
+                            // Build Track document
+                            var newTrack = {
+                              name: currSongData.name,
+                              artist: currSongData.artist,
+                              artists: artists,
+                              album: songData.album.name,
+                              spotifyID: songData.id,
+                              lyrics: dbLyrics
+                            }
+                            Track.create(newTrack, function (err, track) {
+                              if (err) {
+                                console.log(err);
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              });
+            }
+          });
         }
       });
     })
