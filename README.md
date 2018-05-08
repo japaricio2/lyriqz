@@ -1,7 +1,7 @@
  # Lyriqz
-Lyriqz is a web application built because I wanted a better way to find lyrics. It works by using the Spotify and Musixmatch API's. We find out what song you're listening to on Spotify and then go and fetch those lyrics from Musixmatch. 
+Lyriqz is a web application built because I wanted a better way to find lyrics. It works by using the Spotify and Musixmatch APIs. The web service finds out what song you're listening to from Spotify. Then we use that data to find the lyrics and where they're located using the Musixmatch API so the web service can scrape and serve those lyrics to you.
 
-To use it, just make sure you're playing a song on Spotify. Head over to the website and login through Spotify. Once you've been logged in, the lyrics will automatically display for the currently playing song. If another song starts playing go ahead and hit refresh. 
+To use it, just make sure you're playing a song on Spotify. Head over to the website and login through Spotify. Once you've been logged in, the lyrics will automatically display for the currently playing song. If another song starts playing the page should load those lyrics in via AJAX. Enjoy. 
 
 ## [Try it out here!](https://jxja.me/l/)
 
