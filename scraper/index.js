@@ -2,19 +2,19 @@ var request = require('request');
 var cheerio = require('cheerio');
 var randomUseragent = require('random-useragent');
 
-
 var scrape = {
-  musix: function(songUrl, callback) {
+  musix: function (songUrl, callback) {
     var randomAgent = randomUseragent.getRandom();
     var options = {
-      // url: 'https://www.musixmatch.com/lyrics/Tame-Impala/Let-It-Happen',
       url: songUrl,
-      headers: { 'User-Agent': randomAgent }
+      headers: {
+        'User-Agent': randomAgent
+      }
     };
 
-    request(options, function(err, response, body) {
-      if(err || response.statusCode !== 200 ) {
-        if(err) {
+    request(options, function (err, response, body) {
+      if (err || response.statusCode !== 200) {
+        if (err) {
           console.log(err)
           callback(undefined);
           return;
@@ -26,40 +26,29 @@ var scrape = {
         }
       } else {
         $ = cheerio.load(body);
-        var stuff = $('p.mxm-lyrics__content').text();
-        var chunk = '';
+        var stuff = $('p.mxm-lyrics__content');
         var lyrics = [];
-        for(var i = 0; i < stuff.length; i++) {
-            if(stuff[i] === '\n') {
-              chunk+='\n';
-              lyrics.push(chunk);
-              chunk = '';
-            } else {
-              chunk+=stuff[i];
-            }
+        for (var i = 0; i < stuff.length; i++) {
+          lyrics.push(stuff[i]['children'][0]['data'])
         }
-        // lyrics.forEach(function(chunk) {
-        //   if(chunk === '') {
-        //     console.log(' ');
-        //   }
-        //   console.log(chunk);
-        // });
-        // console.log(lyrics);
+        lyrics = lyrics.join('\n')
         callback(lyrics);
       }
     });
   },
-  lyricwiki: function(url, callback) {
+  lyricwiki: function (url, callback) {
     console.log('scraper.lyricWiki');
-    
+
     var randomAgent = randomUseragent.getRandom();
     var options = {
       url: url,
-      headers: { 'User-Agent': randomAgent }
+      headers: {
+        'User-Agent': randomAgent
+      }
     };
-    request(options, function(err, response, body) {
-      if(err || response.statusCode != 200 ) {
-        if(err) {
+    request(options, function (err, response, body) {
+      if (err || response.statusCode != 200) {
+        if (err) {
           console.log(err)
         } else {
           console.log('Response Status Code: ' + response.statusCode);
@@ -71,8 +60,8 @@ var scrape = {
         var chunk = '';
 
         stuff = stuff[0];
-        stuff.children.forEach(function(child) {
-          if(!child.data) {
+        stuff.children.forEach(function (child) {
+          if (!child.data) {
             chunk += '\n';
             lyrics.push(chunk);
             chunk = '';

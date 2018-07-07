@@ -1,7 +1,6 @@
 <% include ./partials/header %>
 
   <section class="hero is-primary is-small">
-    
     <div class="hero-body">
       <div class="container">
         <h1 id="song-title" class="title">
@@ -18,40 +17,7 @@
     <div id="lyrics" class="column is-narrow is-four-fifths">
       <%-data%>
     </div>
-
   </div>
-
-  <script>
-    <% var currentSong = song.name%>
-
-    var currentSong = "<%=currentSong%>";
-
-    function checkForNewLyrics() {
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-
-          var payload = JSON.parse(xhttp.response);
-
-          if (payload.songName) {
-            currentSong = payload.songName;
-            document.getElementById("song-artist").innerText = payload.songArtist;
-            document.getElementById("song-title").innerText = payload.songName;
-            document.getElementById("lyrics").innerHTML = payload.songLyrics;
-          }
-        }
-      }
-      // dev url
-      // xhttp.open('POST', 'http://localhost:3000/l/update', true);
-      xhttp.open('POST', 'https://jxja.me/l/update', true);
-
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("sName=" + currentSong);
-    }
-    setInterval(checkForNewLyrics, 90000);
-  </script>
-  
 <% include ./partials/footer %>
 
 

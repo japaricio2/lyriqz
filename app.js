@@ -159,21 +159,15 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                   } else if (foundTracks.length > 0) {
                     foundTracks.forEach(function (track) {
                       if (track.artist === song.artist) {
-                        var finalLyrics = '';
-                        for (var i = 0; i < track.lyrics.length; i++) {
-                          if (track.lyrics[i] === '\n' || track.lyrics[i] === '') {
-                            if (i >= 1) finalLyrics += '<br>';
-                          } else {
-                            finalLyrics += track.lyrics[i];
-                          }
-                        }
+
                         var songInfo = {
                           name: track.name,
                           artist: track.artist,
                           progress_ms: song.progress_ms
                         }
+
                         res.render('lyrics', {
-                          data: finalLyrics,
+                          data: track.lyrics,
                           song: songInfo
                         });
                       }
@@ -192,13 +186,6 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                             req.flash('error', "Hmm, seems like we couldn't find the lyrics.");
                             res.redirect('/l/error');
                           } else {
-                            var finalLyrics = '';
-                            lyrics.forEach(function (line) {
-                              if (line === '\n' || ' ') {
-                                finalLyrics += '<br>'
-                              }
-                              finalLyrics += line;
-                            });
 
                             var songInfo = {
                               name: song.name,
@@ -206,13 +193,10 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                               progress_ms: song.progress_ms
                             }
                             res.render('lyrics', {
-                              data: finalLyrics,
+                              data: lyrics,
                               song: songInfo
                             });
-                            var dbLyrics = '';
-                            lyrics.forEach(function (line) {
-                              dbLyrics += line
-                            });
+
                             // Build Track document
                             var newTrack = {
                               name: song.name,
@@ -220,7 +204,7 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                               artists: artists,
                               album: songData.album.name,
                               spotifyID: songData.id,
-                              lyrics: dbLyrics
+                              lyrics: lyrics
                             }
                             Track.create(newTrack, function (err, track) {
                               if (err) {
@@ -298,19 +282,11 @@ app.post('/l/update', ensureAuthenticated, function (req, res) {
                   } else if (foundTracks.length > 0) {
                     foundTracks.forEach(function (track) {
                       if (track.artist === currSongData.artist) {
-                        var finalLyrics = '';
-                        for (var i = 0; i < track.lyrics.length; i++) {
-                          if (track.lyrics[i] === '\n' || track.lyrics[i] === '') {
-                            if (i >= 1) finalLyrics += '<br>';
-                          } else {
-                            finalLyrics += track.lyrics[i];
-                          }
-                        }
                         res.json({
                           songName: currSongData.name,
                           songArtist: currSongData.artist,
                           progress_ms: currSongData.progress_ms,
-                          songLyrics: finalLyrics
+                          songLyrics: track.lyrics
                         });
                         return;
                       }
@@ -325,19 +301,12 @@ app.post('/l/update', ensureAuthenticated, function (req, res) {
                           if (!lyrics) {
                             res.json(newPayload);
                           } else {
-                            var finalLyrics = '';
-                            lyrics.forEach(function (line) {
-                              if (line === '\n' || ' ') {
-                                finalLyrics += '<br>'
-                              }
-                              finalLyrics += line;
-                            });
-
+                            
                             res.json({
                               songName: currSongData.name,
                               songArtist: currSongData.artist,
                               progress_ms: currSongData.progress_ms,
-                              songLyrics: finalLyrics
+                              songLyrics: lyrics
                             });
 
                             var dbLyrics = '';

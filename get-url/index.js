@@ -4,7 +4,6 @@ var keys = require('../keys');
 
 var quorum_factor = "quorum_factor=1";
 var apikey = keys.musixmatch.key;
-var urlGetLyrics = "https://api.musixmatch.com/ws/1.1/track.lyrics.get";
 var baseURL = "https://api.musixmatch.com/ws/1.1/track.search"
 
 var options = {
@@ -32,17 +31,23 @@ var getUrl = {
     var musixName = songName;
     var musixArtists = '';
 
-    if(!songName || songName.length === 0 || !songArtists || songArtists.length === 0) {
-      console.log('getUrl.musixmatch --- songName, songArtists returned null');
+    if (!songName || !songArtists) {
+      console.log('getUrl.musixmatch --- songName or songArtists returned null');
       callback(undefined);
       return;
     }
 
-    songArtists.forEach(function(artist) {
+    if (!(songArtists.length >= 1)) {
+      console.log('getUrl.musixmatch --- songArtists returned empty');
+      callback(undefined);
+      return;
+    }
+
+    songArtists.forEach(function (artist) {
       musixArtists += artist + ' ';
     });
 
-    if(songName.includes('feat')) {
+    if (songName.includes('feat')) {
       var musixName = songName.slice(0, songName.indexOf('('));
     }
 
@@ -52,52 +57,48 @@ var getUrl = {
 
     var finalURL = baseURL + queryString;
     options.url = encodeURI(finalURL);
-    // console.log(options.url);
+
     request(options, (error, response, body) => {
-      var code = response.statusCode;
-      console.log(`getUrl.musixmatch.request --- musixmatch returned statusCode: ${code}`);
-      if (!error && code === 200) {
+      if (!error && response.statusCode === 200) {
+        console.log('getUrl.musixmatch.request --- no error and valid status code')
         var payload = {};
         var data;
-        try {
-          data = JSON.parse(body);
-          if(!data.message.body.track_list || !data.message.body.track_list.length === 0) {
-            console.log('');
-            callback(undefined);
-          } else {
-            var listTracks = data.message.body.track_list;
-            if(!listTracks || !listTracks[0]) {
-              // check if list is empty list or null (unlikely)
-              callback(undefined);
-            } else {
-              var lyricURL = listTracks[0].track.track_share_url;
+        data = JSON.parse(body);
+
+        console.log(data.message.body.track_list)
+        // console.log(data.message.body.track_list)
+        var listTracks = data.message.body.track_list;
+        var lyricURL = undefined;
+
+        for (var i = 0; i < listTracks.length; i++) {
+          var musixArtistName = listTracks[i]['track']['artist_name'].toLowerCase();
+          var spotifyArtistName = songArtists[0].toLowerCase();
+
+          if (listTracks[i]['track']['artist_name'] && listTracks[i]['track']['has_lyrics'] === 1) {
+            if (musixArtistName.includes(spotifyArtistName)) {
+              lyricURL = listTracks[i].track.track_share_url;
               lyricURL = lyricURL.split('?')[0];
               artName = lyricURL.split('/')[4]
               sngName = lyricURL.split('/')[5]
-  
-              var url_musixmatch = 'https://www.musixmatch.com/lyrics/' + artName + '/' + sngName;
-              console.log(`getUrl.musixmatch.request --- found lyric endpoint: ${url_musixmatch}`);
-              callback(url_musixmatch);
             }
           }
-        } catch(e) {
-          console.log(`getUrl.musixmatch.request --- try catch caught error`);
-          console.log(e);
-          callback(undefined);
         }
+        callback(lyricURL);
+        return;
       } else {
-        console.log(`getUrl.musixmatch --- musixmatch returned statusCode: ${code}`);
+        console.log(`getUrl.musixmatch --- musixmatch invalid statusCode: ${code} or eror ${error}`);
         callback(undefined);
+        return;
       }
     });
   },
-  lyricWiki: function(songName, songArtist, callback) {
+  lyricWiki: function (songName, songArtist, callback) {
     // http://lyrics.wikia.com/wiki/Special:Search?query=humble+kendrick
     options.url = 'http://lyrics.wikia.com/wiki/Special:Search?query=' + songName + '+' + songArtist;
     options.url = encodeURI(options.url);
-    request(options, function(err, response, body) {
-      if(err || response.statusCode != 200) {
-        if(err) {
+    request(options, function (err, response, body) {
+      if (err || response.statusCode != 200) {
+        if (err) {
           console.log(err);
         } else {
           console.log('Response Status Code: ' + response.statusCode);
@@ -106,38 +107,38 @@ var getUrl = {
       } else {
         var $ = cheerio.load(body);
         var resultLinks = [];
-        var links =  $('.result-link').toArray();
+        var links = $('.result-link').toArray();
         var winners = [];
 
-        links.forEach(function(link, index) {
-          if(index % 2 === 0 ) {
+        links.forEach(function (link, index) {
+          if (index % 2 === 0) {
             resultLinks.push(link.attribs.href);
           }
         });
         links = null;
         var url = '';
 
-        resultLinks.forEach(function(link, index) {
+        resultLinks.forEach(function (link, index) {
           url = decodeURI(link);
           url = url.split('/');
           info = url[4];
-          
-          if(info) {
+
+          if (info) {
             songName = songName.split(' ').join('_');
             artist = info.split(':')[0];
             songTitle = info.split(':')[1];
             // console.log(`${index}. ${artist} - ${songTitle}`);
-            if(artist && songTitle) {
+            if (artist && songTitle) {
               // console.log(`${songTitle} - ${songName}`);
-              if(songName.toLowerCase().includes(songTitle.toLowerCase())) {
+              if (songName.toLowerCase().includes(songTitle.toLowerCase())) {
                 winners.push(link);
-              } 
+              }
             }
           }
         });
         callback(winners[0]);
       }
-    }); 
+    });
   }
 }
 
