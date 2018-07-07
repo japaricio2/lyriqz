@@ -65,8 +65,6 @@ var getUrl = {
         var data;
         data = JSON.parse(body);
 
-        console.log(data.message.body.track_list)
-        // console.log(data.message.body.track_list)
         var listTracks = data.message.body.track_list;
         var lyricURL = undefined;
 
