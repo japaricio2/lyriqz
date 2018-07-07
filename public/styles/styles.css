@@ -1,3 +1,6 @@
+#lyrics {
+  white-space: pre-line;
+}
 .columns {
   padding-top: 1rem;
 }
