@@ -37,9 +37,9 @@ passport.use(new SpotifyStrategy({
     clientID: keys.spotify.clientID,
     clientSecret: keys.spotify.clientSecret,
     // Production
-    callbackURL: 'http://jxja.me/l/callback'
+    // callbackURL: 'http://jxja.me/l/callback'
     // LocalDev
-    // callbackURL: 'http://localhost:3000/l/callback'
+    callbackURL: 'http://localhost:3000/l/callback'
   },
   function (accessToken, refreshToken, profile, done) {
     User.findOne({
@@ -90,7 +90,10 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(express.static(path.join(__dirname + '/public')));
+
+app.set('views', './views');
+
+app.use(express.static('./public'));
 app.use(connectFlash());
 app.use(require('express-session')({
   secret: 'ubuntu is a big red horse',
