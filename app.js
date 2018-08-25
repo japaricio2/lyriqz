@@ -37,9 +37,9 @@ passport.use(new SpotifyStrategy({
     clientID: keys.spotify.clientID,
     clientSecret: keys.spotify.clientSecret,
     // Production
-    // callbackURL: 'http://jxja.me/l/callback'
+    callbackURL: 'http://jxja.me/l/callback'
     // LocalDev
-    callbackURL: 'http://localhost:3000/l/callback'
+    // callbackURL: 'http://localhost:3000/l/callback'
   },
   function (accessToken, refreshToken, profile, done) {
     User.findOne({
