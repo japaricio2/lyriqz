@@ -4,6 +4,7 @@ var SpotifyStrategy = require('passport-spotify').Strategy,
   mongoose = require('mongoose'),
   passport = require('passport'),
   request = require('request'),
+  path = require('path')
   express = require('express');
 
 // Helpers
@@ -91,9 +92,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.set('views', './views');
-
-app.use(express.static('./public'));
+app.use(express.static(__dirname + '/public'));
 app.use(connectFlash());
 app.use(require('express-session')({
   secret: 'ubuntu is a big red horse',
