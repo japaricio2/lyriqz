@@ -87,6 +87,7 @@ passport.use(new SpotifyStrategy({
 var port = 3000;
 var app = express();
 
+app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
