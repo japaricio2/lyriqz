@@ -26,12 +26,14 @@ var scrape = {
         }
       } else {
         $ = cheerio.load(body);
-        var stuff = $('p.mxm-lyrics__content');
+        var stuff = $('span.lyrics__content__ok');
         var lyrics = [];
         for (var i = 0; i < stuff.length; i++) {
           lyrics.push(stuff[i]['children'][0]['data'])
         }
         lyrics = lyrics.join('\n')
+        console.log("LYRICS JUST SCRAPED FROM INDEX IN SCRAPER")
+        console.log(lyrics)
         callback(lyrics);
       }
     });

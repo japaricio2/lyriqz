@@ -168,6 +168,9 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                           artist: track.artist,
                           progress_ms: song.progress_ms
                         }
+                        console.log("FROM MONGODB")
+
+                        console.log(track.lyrics)
 
                         res.render('lyrics', {
                           data: track.lyrics,
@@ -183,8 +186,9 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                         res.redirect('/l/error');
                         console.log('url returned null');
                       } else {
+                        console.log(url)
                         scrape.musix(url, function (lyrics) {
-                          if (!lyrics) {
+                          if (!lyrics || lyrics === "\n") {
                             console.log("couldn't scrape lyrics");
                             req.flash('error', "Hmm, seems like we couldn't find the lyrics.");
                             res.redirect('/l/error');
@@ -195,6 +199,9 @@ app.get('/l/lyrics', ensureAuthenticated, function (req, res) {
                               artist: song.artist,
                               progress_ms: song.progress_ms
                             }
+                            console.log("FROM A SCRAPE")
+                            console.log(lyrics)
+
                             res.render('lyrics', {
                               data: lyrics,
                               song: songInfo
